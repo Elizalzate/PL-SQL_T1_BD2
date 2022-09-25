@@ -37,3 +37,17 @@ BEGIN
     :NEW.s_acumulado := 0;
   END IF;  
 END;
+
+/* Trigger de borrado sobre cooperativa: (15%) */
+
+CREATE OR REPLACE TRIGGER borrado_cooperativa
+AFTER DELETE ON cooperativa
+FOR EACH ROW
+DECLARE
+    CURSOR coopexsocio_c IS SELECT * FROM coopexsocio WHERE coope = :OLD.codigo;
+BEGIN
+    FOR iter IN coopexsocio_c LOOP
+        UPDATE socio SET s_acumulado = s_acumulado - iter.sc_acumulado WHERE idsocio = iter.socio;
+    END LOOP;
+    DELETE FROM coopexsocio WHERE coope = :OLD.codigo;  
+END;
