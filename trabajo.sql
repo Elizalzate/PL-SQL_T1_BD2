@@ -8,7 +8,7 @@ c_acumulado NUMBER(8)
 
 );
 
-CREATE OR REPLACE TRIGGER after_insert_cooperativa
+CREATE OR REPLACE TRIGGER before_insert_cooperativa
 BEFORE INSERT
   on cooperativa
   FOR EACH ROW 
@@ -18,3 +18,22 @@ BEGIN
   END IF;  
 END;
 
+CREATE TABLE socio(
+
+idsocio NUMBER(8) PRIMARY KEY,
+
+nombre VARCHAR2(30) NOT NULL,
+
+s_acumulado NUMBER(11,3) CHECK(s_acumulado >= 0)
+
+);
+
+CREATE OR REPLACE TRIGGER before_insert_socio
+BEFORE INSERT
+  on socio
+  FOR EACH ROW 
+BEGIN
+  IF(:NEW.s_acumulado != 0 OR :NEW.s_acumulado is null) THEN
+    :NEW.s_acumulado := 0;
+  END IF;  
+END;
