@@ -37,3 +37,12 @@ BEGIN
     :NEW.s_acumulado := 0;
   END IF;  
 END;
+
+/* Trigger de borrado sobre la tabla socio (10%) */
+
+CREATE OR REPLACE TRIGGER borrado_socio
+AFTER DELETE ON socio
+FOR EACH ROW
+BEGIN
+    DELETE FROM coopexsocio WHERE socio = :OLD.idsocio;
+END;
