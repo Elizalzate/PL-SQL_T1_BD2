@@ -70,11 +70,12 @@ BEGIN
     DELETE FROM coopexsocio WHERE coope = :OLD.codigo;  
 END;
 
-/* Trigger de borrado sobre la tabla socio (10%) */
+/* Trigger de borrado sobre la tabla socio: (10%) */
 
-CREATE OR REPLACE TRIGGER borrado_socio
-AFTER DELETE ON socio
-FOR EACH ROW
+CREATE OR REPLACE TRIGGER after_delete_socio
+AFTER DELETE 
+    ON socio
+    FOR EACH ROW
 BEGIN
     DELETE FROM coopexsocio WHERE socio = :OLD.idsocio;
 END;
