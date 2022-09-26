@@ -8,7 +8,7 @@ c_acumulado NUMBER(8)
 
 );
 
-CREATE OR REPLACE TRIGGER after_insert_cooperativa
+CREATE OR REPLACE TRIGGER before_insert_cooperativa
 BEFORE INSERT
   on cooperativa
   FOR EACH ROW 
@@ -51,3 +51,48 @@ INSERT INTO socio VALUES (60,'Kyla La Grange', -3000);
 INSERT INTO socio(idsocio, nombre) VALUES (99,'Cass Fox');
 
 SELECT * FROM socio;
+
+CREATE TABLE coopexsocio(
+
+socio NUMBER(8) REFERENCES socio,
+
+coope NUMBER(11, 3) REFERENCES cooperativa,
+
+PRIMARY KEY(socio, coope),
+
+sc_acumulado NUMBER(8)
+
+);
+
+CREATE OR REPLACE TRIGGER before_insert_coopexsocio
+BEFORE INSERT
+  on coopexsocio
+  FOR EACH ROW 
+BEGIN
+  IF(:NEW.sc_acumulado != 0 OR :NEW.sc_acumulado is null) THEN
+    :NEW.sc_acumulado := 0;
+  END IF;  
+END;
+
+INSERT INTO coopexsocio VALUES (50,1, 100);
+INSERT INTO coopexsocio VALUES (60,2, -3000);
+INSERT INTO coopexsocio(socio, coope) VALUES (50,3);
+
+SELECT * FROM coopexsocio;
+
+CREATE OR REPLACE TRIGGER before_update_cooperativa
+BEFORE UPDATE
+  on cooperativa
+  FOR EACH ROW 
+DECLARE
+    cooperativa NUMBER(8);
+    socio NUMBER(8);
+    incremento NUMBER(8);
+    Nsocios NUMBER(8);
+    incrementoxsocio NUMBER(8);
+    sc_acumulado NUMBER(8);
+    s_acumulado NUMBER(8);
+BEGIN
+    incremento :=  :NEW.c_acumulado - :OLD.c_acumulado;
+    DBMS_OUTPUT.PUT_LINE(incremento);  
+END;
