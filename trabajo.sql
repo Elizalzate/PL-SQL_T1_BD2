@@ -30,6 +30,7 @@ BEGIN
     :NEW.c_acumulado := 0;
   END IF;  
 END;
+/
 
 /* Trigger de insercion 2: (3%) */
 
@@ -42,6 +43,7 @@ BEGIN
     :NEW.s_acumulado := 0;
   END IF;  
 END;
+/
  
 /* Trigger de inserción 3: (3%) */
 CREATE OR REPLACE TRIGGER before_insert_coopexsocio
@@ -52,8 +54,8 @@ BEGIN
   IF(:NEW.sc_acumulado != 0 OR :NEW.sc_acumulado is null) THEN
     :NEW.sc_acumulado := 0;
   END IF;  
-
 END;
+/
 
 /* Trigger de actualización sobre cooperativa: (25%) */
 
@@ -81,6 +83,7 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE (Nsocios);
     DBMS_OUTPUT.PUT_LINE (incrementoxsocio);
 END;
+/
 
 /* Trigger de borrado sobre cooperativa: (15%) */
 
@@ -96,6 +99,7 @@ BEGIN
     END LOOP;
     DELETE FROM coopexsocio WHERE coope = :OLD.codigo;  
 END;
+/
 
 /* Trigger de borrado sobre la tabla socio: (10%) */
 
@@ -106,6 +110,7 @@ AFTER DELETE
 BEGIN
     DELETE FROM coopexsocio WHERE socio = :OLD.idsocio;
 END;
+/
 
 /* Programa 1 PL/SQL */
 
@@ -134,6 +139,7 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('}');
     DBMS_OUTPUT.PUT_LINE('Total valores de los socios en la cooperativa: '|| total_valores);
 END;
+/
 
 /* Procedimiento 2 PL/SQL */
 
@@ -170,3 +176,4 @@ BEGIN
     END LOOP;
     DBMS_OUTPUT.PUT_LINE('}');
 END;
+/
