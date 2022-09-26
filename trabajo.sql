@@ -37,3 +37,15 @@ BEGIN
     :NEW.s_acumulado := 0;
   END IF;  
 END;
+
+CREATE TABLE coopexsocio(
+
+socio NUMBER(8) REFERENCES socio,
+
+coope NUMBER(11, 3) REFERENCES cooperativa,
+
+PRIMARY KEY(socio, coope),
+
+sc_acumulado NUMBER(8)
+
+);
