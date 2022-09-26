@@ -64,24 +64,22 @@ BEFORE UPDATE
   on cooperativa
   FOR EACH ROW 
 DECLARE
-    cooperativa NUMBER(8);
-    socio NUMBER(8);
+    CURSOR sc_acumulado_c IS 
+        SELECT * FROM coopexsocio 
+        WHERE coope = :NEW.codigo;
     incremento NUMBER(8);
     Nsocios NUMBER(8);
     incrementoxsocio NUMBER(8);
-    sc_acumulado NUMBER(8);
-    s_acumulado NUMBER(8);
 BEGIN
     incremento :=  :NEW.c_acumulado - :OLD.c_acumulado;
-    SELECT COUNT(*) INTO Nsocios FROM coopexsocio WHERE  coope = :NEW.codigo;
-    incrementoxsocio := (incremento / Nsocios);
-    SELECT sc_acumulado INTO sc_acumulado FROM coopexsocio WHERE coope = :NEW.codigo;
-    sc_acumulado := sc_acumulado + incremento 
-    DBMS_OUTPUT.PUT_LINE (:NEW.c_acumulado);
-    DBMS_OUTPUT.PUT_LINE (:OLD.c_acumulado);
-    DBMS_OUTPUT.PUT_LINE (incremento);  
-    DBMS_OUTPUT.PUT_LINE (Nsocios);
-    DBMS_OUTPUT.PUT_LINE (incrementoxsocio);
+    FOR i IN sc_acumulado_c LOOP
+        SELECT COUNT(*) INTO Nsocios FROM coopexsocio WHERE  coope = i.coope;
+        incrementoxsocio := (incremento / Nsocios);
+        DBMS_OUTPUT.PUT_LINE(incrementoxsocio);
+        DBMS_OUTPUT.PUT_LINE( Nsocios);
+        UPDATE coopexsocio SET sc_acumulado = sc_acumulado + incrementoxsocio WHERE coope = i.coope;
+        UPDATE socio SET s_acumulado = s_acumulado + incrementoxsocio WHERE idsocio = i.socio;
+    END LOOP;
 END;
 /
 
