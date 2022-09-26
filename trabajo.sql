@@ -107,3 +107,39 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('}');
     DBMS_OUTPUT.PUT_LINE('Total valores de los socios en la cooperativa: '|| total_valores);
 END;
+
+/* Procedimiento 2 PL/SQL */
+
+CREATE OR REPLACE PROCEDURE consulta_socio
+(id_socio IN socio.idsocio%TYPE) IS
+datos_socio socio%ROWTYPE;
+num_participacion NUMBER(5);
+nom_coope cooperativa.nombre%TYPE;
+count_coopes NUMBER(5) := 1;
+count_no_coopes NUMBER(5) := 1;
+BEGIN
+    SELECT * INTO datos_socio FROM socio WHERE idsocio = id_socio;
+    SELECT COUNT(*) INTO num_participacion FROM coopexsocio WHERE socio = id_socio GROUP BY socio; 
+    
+    DBMS_OUTPUT.PUT_LINE('Nombre del socio: '|| datos_socio.nombre);
+    DBMS_OUTPUT.PUT_LINE('Acumulado del socio: '|| datos_socio.s_acumulado);
+    DBMS_OUTPUT.PUT_LINE('Número de cooperativas en las que participa: '|| num_participacion);
+    DBMS_OUTPUT.PUT_LINE('Cooperativas del socio:');
+    DBMS_OUTPUT.PUT_LINE('{');
+    FOR iter_coope IN (SELECT * FROM coopexsocio WHERE socio = id_socio) LOOP
+        SELECT nombre INTO nom_coope FROM cooperativa WHERE codigo = iter_coope.coope;
+        DBMS_OUTPUT.PUT_LINE(count_coopes || '. (Nombre: '|| nom_coope || ', Valorsc: ' || iter_coope.sc_acumulado || ')');
+        count_coopes := count_coopes + 1;
+    END LOOP;
+    DBMS_OUTPUT.PUT_LINE('}');
+    DBMS_OUTPUT.PUT_LINE('Cooperativas en las que no está el socio:');
+    DBMS_OUTPUT.PUT_LINE('{');
+    FOR iter_coope IN (SELECT * FROM (SELECT * FROM coopexsocio WHERE socio = id_socio) coopes_socio RIGHT JOIN cooperativa 
+    ON coopes_socio.coope = cooperativa.codigo WHERE coopes_socio.coope IS NULL) 
+    LOOP
+        nom_coope := iter_coope.nombre;
+        DBMS_OUTPUT.PUT_LINE(count_no_coopes || '. '|| nom_coope);
+        count_no_coopes := count_no_coopes + 1;
+    END LOOP;
+    DBMS_OUTPUT.PUT_LINE('}');
+END;
