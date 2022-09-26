@@ -58,7 +58,6 @@ END;
 /
 
 /* Trigger de actualización sobre cooperativa: (25%) */
-
 CREATE OR REPLACE TRIGGER before_update_cooperativa
 BEFORE UPDATE
   on cooperativa
@@ -66,7 +65,7 @@ BEFORE UPDATE
 DECLARE
     CURSOR sc_acumulado_c IS 
         SELECT * FROM coopexsocio 
-        WHERE coope = :NEW.codigo;
+        WHERE coope =  :NEW.codigo;
     incremento NUMBER(8);
     Nsocios NUMBER(8);
     incrementoxsocio NUMBER(8);
@@ -76,10 +75,10 @@ BEGIN
         SELECT COUNT(*) INTO Nsocios FROM coopexsocio WHERE  coope = i.coope;
         incrementoxsocio := (incremento / Nsocios);
         DBMS_OUTPUT.PUT_LINE(incrementoxsocio);
-        DBMS_OUTPUT.PUT_LINE( Nsocios);
-        UPDATE coopexsocio SET sc_acumulado = sc_acumulado + incrementoxsocio WHERE coope = i.coope;
+        DBMS_OUTPUT.PUT_LINE(i.coope);
         UPDATE socio SET s_acumulado = s_acumulado + incrementoxsocio WHERE idsocio = i.socio;
     END LOOP;
+    UPDATE coopexsocio SET sc_acumulado = sc_acumulado + incrementoxsocio WHERE coope = :NEW.codigo;
 END;
 /
 
