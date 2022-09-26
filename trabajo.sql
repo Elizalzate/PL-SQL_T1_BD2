@@ -60,7 +60,7 @@ BEGIN
     FOR iter_socio IN socios_coope LOOP
         SELECT nombre INTO nom_socio FROM socio WHERE idsocio = iter_socio.socio;
         DBMS_OUTPUT.PUT_LINE(count_socios || '. (Nombre: '|| nom_socio || ', Valorsc: ' || iter_socio.sc_acumulado || ')');
-        num_socios := num_socios + 1;
+        count_socios := count_socios + 1;
     END LOOP;
     DBMS_OUTPUT.PUT_LINE('}');
     DBMS_OUTPUT.PUT_LINE('Total valores de los socios en la cooperativa: '|| total_valores);
