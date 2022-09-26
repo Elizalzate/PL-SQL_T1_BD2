@@ -98,7 +98,7 @@ BEGIN
 END;
 /
 
-/* Trigger de borrado sobre la tabla socio: (10%) */
+/* Trigger de borrado sobre socio: (10%) */
 
 CREATE OR REPLACE TRIGGER after_delete_socio
 AFTER DELETE 
@@ -138,7 +138,7 @@ BEGIN
 END;
 /
 
-/* Procedimiento 2 PL/SQL */
+/* Programa 2 PL/SQL */
 
 CREATE OR REPLACE PROCEDURE consulta_socio
 (id_socio IN socio.idsocio%TYPE) IS
