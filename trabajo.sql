@@ -55,6 +55,33 @@ BEGIN
 
 END;
 
+/* Trigger de actualización sobre cooperativa: (25%) */
+
+CREATE OR REPLACE TRIGGER before_update_cooperativa
+BEFORE UPDATE
+  on cooperativa
+  FOR EACH ROW 
+DECLARE
+    cooperativa NUMBER(8);
+    socio NUMBER(8);
+    incremento NUMBER(8);
+    Nsocios NUMBER(8);
+    incrementoxsocio NUMBER(8);
+    sc_acumulado NUMBER(8);
+    s_acumulado NUMBER(8);
+BEGIN
+    incremento :=  :NEW.c_acumulado - :OLD.c_acumulado;
+    SELECT COUNT(*) INTO Nsocios FROM coopexsocio WHERE  coope = :NEW.codigo;
+    incrementoxsocio := (incremento / Nsocios);
+    SELECT sc_acumulado INTO sc_acumulado FROM coopexsocio WHERE coope = :NEW.codigo;
+    sc_acumulado := sc_acumulado + incremento 
+    DBMS_OUTPUT.PUT_LINE (:NEW.c_acumulado);
+    DBMS_OUTPUT.PUT_LINE (:OLD.c_acumulado);
+    DBMS_OUTPUT.PUT_LINE (incremento);  
+    DBMS_OUTPUT.PUT_LINE (Nsocios);
+    DBMS_OUTPUT.PUT_LINE (incrementoxsocio);
+END;
+
 /* Trigger de borrado sobre cooperativa: (15%) */
 
 CREATE OR REPLACE TRIGGER after_delete_cooperativa
