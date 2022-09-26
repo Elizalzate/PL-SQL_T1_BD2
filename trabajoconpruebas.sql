@@ -96,3 +96,17 @@ BEGIN
     incremento :=  :NEW.c_acumulado - :OLD.c_acumulado;
     DBMS_OUTPUT.PUT_LINE(incremento);  
 END;
+
+INSERT INTO cooperativa VALUES (1, 'Faithless', 2000);
+INSERT INTO cooperativa VALUES (4, 'El Cerdito', 12000);
+INSERT INTO cooperativa VALUES (5, 'Su vaquita', -2000);
+
+INSERT INTO socio VALUES (50, 'Rhianna Kenny', 5500);
+INSERT INTO socio VALUES (60, 'Kyla LaGrange', 51500);
+INSERT INTO socio VALUES (99, 'Cass Fox', 0);
+
+INSERT INTO coopexsocio VALUES (50, 1, 2000);
+INSERT INTO coopexsocio VALUES (60, 1, 0);
+INSERT INTO coopexsocio VALUES (99, 1, -2000);
+INSERT INTO coopexsocio VALUES (60,5, 2000);
+INSERT INTO coopexsocio VALUES (99, 5, -12000);
