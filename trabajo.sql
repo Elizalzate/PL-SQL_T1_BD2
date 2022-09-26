@@ -43,7 +43,6 @@ BEGIN
   END IF;  
 END;
 
-
 /* Trigger de inserción 3: (3%) */
 CREATE OR REPLACE TRIGGER before_insert_coopexsocio
 BEFORE INSERT
@@ -69,4 +68,13 @@ BEGIN
         UPDATE socio SET s_acumulado = s_acumulado - iter.sc_acumulado WHERE idsocio = iter.socio;
     END LOOP;
     DELETE FROM coopexsocio WHERE coope = :OLD.codigo;  
+END;
+
+/* Trigger de borrado sobre la tabla socio (10%) */
+
+CREATE OR REPLACE TRIGGER borrado_socio
+AFTER DELETE ON socio
+FOR EACH ROW
+BEGIN
+    DELETE FROM coopexsocio WHERE socio = :OLD.idsocio;
 END;
